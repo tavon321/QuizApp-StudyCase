@@ -9,27 +9,47 @@ import XCTest
 
 class Flow {
     private let router: Router
+    private let questions: [String]
 
-    init(router: Router) {
+    init(questions: [String], router: Router) {
         self.router = router
+        self.questions = questions
     }
 
-    func start() {}
+    func start() {
+        guard !questions.isEmpty else { return }
+        router.routToQuestion()
+    }
 }
 
-protocol Router {}
+protocol Router {
+    func routToQuestion()
+}
 
 class FlowTests: XCTestCase {
     func test_start_withNoQuestionDoesNoRouteToQuestion() {
         let router = RouterSpy()
-        let sut = Flow(router: router)
+        let sut = Flow(questions: [], router: router)
 
         sut.start()
 
         XCTAssertEqual(router.routerQuestionCount, 0)
     }
 
+    func test_start_withOneQuestionRouteToQuestion() {
+        let router = RouterSpy()
+        let sut = Flow(questions: ["a question"], router: router)
+
+        sut.start()
+
+        XCTAssertEqual(router.routerQuestionCount, 1)
+    }
+
     class RouterSpy: Router {
         var routerQuestionCount = 0
+
+        func routToQuestion() {
+            routerQuestionCount += 1
+        }
     }
 }
