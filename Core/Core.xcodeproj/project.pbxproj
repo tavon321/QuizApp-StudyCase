@@ -10,6 +10,7 @@
 		40B8B2AD25B6440B005AB0AC /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B8B2A325B6440B005AB0AC /* Core.framework */; };
 		40B8B2B225B6440B005AB0AC /* CoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B2B125B6440B005AB0AC /* CoreTests.swift */; };
 		40B8B2B425B6440B005AB0AC /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B8B2A625B6440B005AB0AC /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		40B8B2C025B64437005AB0AC /* FlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B8B2BF25B64437005AB0AC /* FlowTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		40B8B2AC25B6440B005AB0AC /* CoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B8B2B125B6440B005AB0AC /* CoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTests.swift; sourceTree = "<group>"; };
 		40B8B2B325B6440B005AB0AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40B8B2BF25B64437005AB0AC /* FlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 			children = (
 				40B8B2B125B6440B005AB0AC /* CoreTests.swift */,
 				40B8B2B325B6440B005AB0AC /* Info.plist */,
+				40B8B2BF25B64437005AB0AC /* FlowTests.swift */,
 			);
 			path = CoreTests;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40B8B2B225B6440B005AB0AC /* CoreTests.swift in Sources */,
+				40B8B2C025B64437005AB0AC /* FlowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
