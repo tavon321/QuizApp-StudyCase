@@ -28,8 +28,7 @@ protocol Router {
 
 class FlowTests: XCTestCase {
     func test_start_withNoQuestionDoesNoRouteToQuestion() {
-        let router = RouterSpy()
-        let sut = Flow(questions: [], router: router)
+        let (sut, router) = makeSUT()
 
         sut.start()
 
@@ -37,15 +36,22 @@ class FlowTests: XCTestCase {
     }
 
     func test_start_withOneQuestionRouteToQuestion() {
-        let router = RouterSpy()
-        let sut = Flow(questions: ["a question"], router: router)
+        let (sut, router) = makeSUT(questions: ["any question"])
 
         sut.start()
 
         XCTAssertEqual(router.routerQuestionCount, 1)
     }
 
-    class RouterSpy: Router {
+    // MARK: - Helpers
+    private func makeSUT(questions: [String] = []) -> (sut: Flow, router: RouterSpy){
+        let router = RouterSpy()
+        let sut = Flow(questions: questions, router: router)
+
+        return (sut: sut, router: router)
+    }
+
+    private class RouterSpy: Router {
         var routerQuestionCount = 0
 
         func routToQuestion() {
