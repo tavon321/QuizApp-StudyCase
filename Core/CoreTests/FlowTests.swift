@@ -18,12 +18,12 @@ class Flow {
 
     func start() {
         guard !questions.isEmpty else { return }
-        router.routToQuestion()
+        router.rout(toQuestion: questions[0])
     }
 }
 
 protocol Router {
-    func routToQuestion()
+    func rout(toQuestion question: String)
 }
 
 class FlowTests: XCTestCase {
@@ -36,11 +36,12 @@ class FlowTests: XCTestCase {
     }
 
     func test_start_withOneQuestionRouteToQuestion() {
-        let (sut, router) = makeSUT(questions: ["any question"])
+        let expectedQuestion = "a question"
+        let (sut, router) = makeSUT(questions: [expectedQuestion])
 
         sut.start()
 
-        XCTAssertEqual(router.routerQuestionCount, 1)
+        XCTAssertEqual(router.routerQuestions, [expectedQuestion])
     }
 
     // MARK: - Helpers
@@ -53,8 +54,10 @@ class FlowTests: XCTestCase {
 
     private class RouterSpy: Router {
         var routerQuestionCount = 0
+        var routerQuestions = [String]()
 
-        func routToQuestion() {
+        func rout(toQuestion question: String) {
+            routerQuestions.append(question)
             routerQuestionCount += 1
         }
     }
