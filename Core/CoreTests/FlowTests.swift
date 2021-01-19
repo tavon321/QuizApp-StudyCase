@@ -32,7 +32,7 @@ class FlowTests: XCTestCase {
 
         sut.start()
 
-        XCTAssertEqual(router.routerQuestionCount, 0)
+        XCTAssertTrue(router.routerQuestions.isEmpty)
     }
 
     func test_start_withOneQuestionRouteToQuestion() {
@@ -53,12 +53,10 @@ class FlowTests: XCTestCase {
     }
 
     private class RouterSpy: Router {
-        var routerQuestionCount = 0
         var routerQuestions = [String]()
 
         func rout(toQuestion question: String) {
             routerQuestions.append(question)
-            routerQuestionCount += 1
         }
     }
 }
