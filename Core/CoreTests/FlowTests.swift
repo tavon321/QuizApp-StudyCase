@@ -54,6 +54,17 @@ class FlowTests: XCTestCase {
         XCTAssertEqual(router.routerQuestions, [expectedQuestion])
     }
 
+    func test_startTwice_withTwoQuestionRouteToFirstQuestionTwice() {
+        let expectedQuestion = "a question"
+        let expectedQuestionTwo = "another question"
+        let (sut, router) = makeSUT(questions: [expectedQuestion, expectedQuestionTwo])
+
+        sut.start()
+        sut.start()
+
+        XCTAssertEqual(router.routerQuestions, [expectedQuestion, expectedQuestion])
+    }
+
     // MARK: - Helpers
     private func makeSUT(questions: [String] = []) -> (sut: Flow, router: RouterSpy){
         let router = RouterSpy()
