@@ -18,12 +18,18 @@ class Flow {
 
     func start() {
         guard let firstQuestion = questions.first else { return }
-        router.rout(toQuestion: firstQuestion)
+        router.route(toQuestion: firstQuestion) { _ in
+            let currentQuestionIndex =  self.questions.firstIndex(of: firstQuestion)!
+            let nextQuestion = self.questions[currentQuestionIndex + 1]
+
+            self.router.route(toQuestion: nextQuestion) { _ in
+            }
+        }
     }
 }
 
 protocol Router {
-    func rout(toQuestion question: String)
+    func route(toQuestion question: String, answerCallback: @escaping (String) -> Void)
 }
 
 class FlowTests: XCTestCase {
@@ -65,6 +71,17 @@ class FlowTests: XCTestCase {
         XCTAssertEqual(router.routerQuestions, [expectedQuestionOne, expectedQuestionOne])
     }
 
+    func test_startAndAnswerFirstQuestion_withTwoQuestionRouteToSecondQuestion() {
+        let expectedQuestionOne = "a question"
+        let expectedQuestionTwo = "another question"
+        let (sut, router) = makeSUT(questions: [expectedQuestionOne, expectedQuestionTwo])
+
+        sut.start()
+        router.answerCallbacks[0](expectedQuestionTwo)
+
+        XCTAssertEqual(router.routerQuestions, [expectedQuestionOne, expectedQuestionTwo])
+    }
+
     // MARK: - Helpers
     private func makeSUT(questions: [String] = []) -> (sut: Flow, router: RouterSpy){
         let router = RouterSpy()
@@ -75,9 +92,11 @@ class FlowTests: XCTestCase {
 
     private class RouterSpy: Router {
         var routerQuestions = [String]()
+        var answerCallbacks = [(String) -> Void]()
 
-        func rout(toQuestion question: String) {
+        func route(toQuestion question: String, answerCallback: @escaping (String) -> Void) {
             routerQuestions.append(question)
+            answerCallbacks.append(answerCallback)
         }
     }
 }
