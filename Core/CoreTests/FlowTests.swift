@@ -77,7 +77,7 @@ class FlowTests: XCTestCase {
         let (sut, router) = makeSUT(questions: [expectedQuestionOne, expectedQuestionTwo])
 
         sut.start()
-        router.answerCallbacks[0](expectedQuestionTwo)
+        router.answer(with: "any answer")
 
         XCTAssertEqual(router.routerQuestions, [expectedQuestionOne, expectedQuestionTwo])
     }
@@ -92,11 +92,20 @@ class FlowTests: XCTestCase {
 
     private class RouterSpy: Router {
         var routerQuestions = [String]()
-        var answerCallbacks = [(String) -> Void]()
+        private var answerCallbacks = [(String) -> Void]()
 
         func route(toQuestion question: String, answerCallback: @escaping (String) -> Void) {
             routerQuestions.append(question)
             answerCallbacks.append(answerCallback)
+        }
+
+        func answer(with value: String, at index: Int = 0, file: StaticString = #filePath, line: UInt = #line) {
+            guard index < answerCallbacks.count else {
+                XCTFail("answer call wasn't called", file: file, line: line)
+                return
+            }
+
+            answerCallbacks[index](value)
         }
     }
 }
