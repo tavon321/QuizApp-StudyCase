@@ -17,13 +17,19 @@ class Flow {
     }
 
     func start() {
-        guard let firstQuestion = questions.first else { return }
-        router.route(toQuestion: firstQuestion) { _ in
-            let currentQuestionIndex =  self.questions.firstIndex(of: firstQuestion)!
-            let nextQuestion = self.questions[currentQuestionIndex + 1]
+        guard !questions.isEmpty else { return }
+        let currentIndex = 0
+        router.route(toQuestion: questions[currentIndex]) { _ in
+            self.routeNextQuestion(atIndex: currentIndex)
+        }
+    }
 
-            self.router.route(toQuestion: nextQuestion) { _ in
-            }
+    private func routeNextQuestion(atIndex index: Int) {
+        let nextIndex = questions.index(after: index)
+        guard nextIndex < self.questions.count else { return }
+
+        self.router.route(toQuestion: self.questions[nextIndex]) { _ in
+            self.routeNextQuestion(atIndex: nextIndex)
         }
     }
 }
@@ -71,18 +77,23 @@ class FlowTests: XCTestCase {
         XCTAssertEqual(router.routerQuestions, [expectedQuestionOne, expectedQuestionOne])
     }
 
-    func test_startAndAnswerFirstQuestion_withTwoQuestionRouteToSecondQuestion() {
-        let expectedQuestionOne = "a question"
-        let expectedQuestionTwo = "another question"
-        let (sut, router) = makeSUT(questions: [expectedQuestionOne, expectedQuestionTwo])
+    func test_startAndAnswerQuestion_routeToNextQuestion() {
+        let expectedQuestions = makeQuestions(numberOfQuestions: 30)
+        let (sut, router) = makeSUT(questions: expectedQuestions)
 
         sut.start()
-        router.answer(with: "any answer")
 
-        XCTAssertEqual(router.routerQuestions, [expectedQuestionOne, expectedQuestionTwo])
+        expectedQuestions.enumerated().forEach { (index, question) in
+            router.answer(with: "any answer", at: index)
+            XCTAssertEqual(router.routerQuestions[index], question)
+        }
     }
 
     // MARK: - Helpers
+    private func makeQuestions(numberOfQuestions: Int) -> [String] {
+        return (0..<numberOfQuestions).map({ "Q\($0)" })
+    }
+
     private func makeSUT(questions: [String] = []) -> (sut: Flow, router: RouterSpy){
         let router = RouterSpy()
         let sut = Flow(questions: questions, router: router)
