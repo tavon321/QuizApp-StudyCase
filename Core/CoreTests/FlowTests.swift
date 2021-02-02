@@ -19,7 +19,8 @@ class Flow {
     func start() {
         guard !questions.isEmpty else { return }
         let currentIndex = 0
-        router.route(toQuestion: questions[currentIndex]) { _ in
+        router.route(toQuestion: questions[currentIndex]) { [weak self] _ in
+            guard let self = self else { return }
             self.routeNextQuestion(atIndex: currentIndex)
         }
     }
@@ -28,7 +29,8 @@ class Flow {
         let nextIndex = questions.index(after: index)
         guard nextIndex < self.questions.count else { return }
 
-        self.router.route(toQuestion: self.questions[nextIndex]) { _ in
+        self.router.route(toQuestion: self.questions[nextIndex]) { [weak self] _ in
+            guard let self = self else { return }
             self.routeNextQuestion(atIndex: nextIndex)
         }
     }
@@ -98,7 +100,18 @@ class FlowTests: XCTestCase {
         let router = RouterSpy()
         let sut = Flow(questions: questions, router: router)
 
+        trackForMemoryLeaks(router)
+        trackForMemoryLeaks(sut)
         return (sut: sut, router: router)
+    }
+
+    private func trackForMemoryLeaks(_ sut: AnyObject?, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak sut] in
+            XCTAssertNil(sut,
+                         "Instance should have being deallocated. Potential memory leak",
+                         file: file,
+                         line: line)
+        }
     }
 
     private var anyAnswer: String { return "Any Answer" }
