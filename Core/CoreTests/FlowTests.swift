@@ -84,7 +84,7 @@ class FlowTests: XCTestCase {
         sut.start()
 
         expectedQuestions.enumerated().forEach { (index, question) in
-            router.answer(with: "any answer", at: index)
+            router.answer(with: anyAnswer, at: index)
             XCTAssertEqual(router.routerQuestions[index], question)
         }
     }
@@ -100,6 +100,8 @@ class FlowTests: XCTestCase {
 
         return (sut: sut, router: router)
     }
+
+    private var anyAnswer: String { return "Any Answer" }
 
     private class RouterSpy: Router {
         var routerQuestions = [String]()
