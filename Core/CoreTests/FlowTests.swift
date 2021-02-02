@@ -18,20 +18,16 @@ class Flow {
 
     func start() {
         guard !questions.isEmpty else { return }
-        let currentIndex = 0
-        router.route(toQuestion: questions[currentIndex]) { [weak self] _ in
-            guard let self = self else { return }
-            self.routeNextQuestion(atIndex: currentIndex)
-        }
+        let intitalIndex = 0
+        routeNextQuestion(atIndex: intitalIndex)
     }
 
     private func routeNextQuestion(atIndex index: Int) {
-        let nextIndex = questions.index(after: index)
-        guard nextIndex < self.questions.count else { return }
+        guard index < self.questions.count else { return }
 
-        self.router.route(toQuestion: self.questions[nextIndex]) { [weak self] _ in
+        self.router.route(toQuestion: self.questions[index]) { [weak self] _ in
             guard let self = self else { return }
-            self.routeNextQuestion(atIndex: nextIndex)
+            self.routeNextQuestion(atIndex: self.questions.index(after: index))
         }
     }
 }
